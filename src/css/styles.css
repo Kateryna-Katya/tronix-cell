@@ -291,19 +291,20 @@ a:hover {
 /* ================================================= */
 
 .hero {
-  position: relative;
-  /* Увеличенный padding для Hero */
-  padding-top: calc(var(--header-height) + 4rem);
-  padding-bottom: 4rem;
+position: relative;
+  /* Уменьшаем отступ сверху, чтобы контент Hero занимал больше места на экране */
+  padding-top: calc(var(--header-height) + 2rem);
+  padding-bottom: 2rem;
   min-height: 100vh;
   display: flex;
   align-items: center;
   overflow: hidden;
   text-align: center;
+  /* Центрирование текста по умолчанию */
 }
 
 .hero__container {
-  position: relative;
+position: relative;
   z-index: 10;
   height: 100%;
   display: flex;
@@ -312,11 +313,13 @@ a:hover {
 }
 
 .hero__content {
-  max-width: 900px;
+max-width: 900px;
+  padding-top: 2rem;
+  /* Добавляем небольшой отступ, чтобы контент не прилипал к верху */
 }
 
 .hero__title {
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(2rem, 6vw, 5rem);
   font-weight: 800;
   margin-bottom: 1.5rem;
   line-height: 1.1;
@@ -1127,11 +1130,6 @@ a:hover {
 
 /* Tablet and larger screens (>= 768px) */
 @media screen and (min-width: 768px) {
-  /* ... (стили для контейнера, скрытия toggle) ... */
-
-  .header__toggle {
-      display: none;
-  }
 
   .nav {
       /* Переопределяем стили для десктопа: возвращаем горизонтальное меню */

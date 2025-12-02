@@ -1,250 +1,226 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // =================================================
-  // КОНСТАНТЫ
-  // =================================================
-  // Примечание: Используем headerToggle вместо navToggle, если это его id
-  const headerToggle = document.getElementById('nav-toggle');
-  const navMenu = document.getElementById('nav-menu');
-  const navLinks = document.querySelectorAll('.nav__link');
+    // =================================================
+    // КОНСТАНТЫ
+    // =================================================
+    const headerToggle = document.getElementById('nav-toggle'); 
+    const navMenu = document.getElementById('nav-menu');
+    const navLinks = document.querySelectorAll('.nav__link');
 
-  const cookiePopup = document.getElementById('cookie-popup');
-  const cookieAcceptBtn = document.getElementById('cookie-accept');
-  const cookieName = 'tronix_cookie_accepted';
+    const cookiePopup = document.getElementById('cookie-popup');
+    const cookieAcceptBtn = document.getElementById('cookie-accept');
+    const cookieName = 'tronix_cookie_accepted';
 
-  const quizForm = document.getElementById('quiz-form');
-  const contactForm = document.getElementById('contact-form');
-  const submitContactBtn = document.getElementById('submit-btn');
-  const successMessage = document.getElementById('success-message');
-
-  let correctCaptchaAnswer = 0;
-
-
-  // =================================================
-  // 1. COOKIE POPUP ЛОГИКА
-  // =================================================
-
-  const showCookiePopup = () => {
-      if (cookiePopup && localStorage.getItem(cookieName) !== 'true') {
-          setTimeout(() => {
-              cookiePopup.classList.add('cookie-popup--visible');
-          }, 1000);
-      }
-  };
-
-  const hideCookiePopup = () => {
-      if (cookiePopup) {
-          cookiePopup.classList.remove('cookie-popup--visible');
-          localStorage.setItem(cookieName, 'true');
-      }
-  };
-
-  if (cookieAcceptBtn) {
-      cookieAcceptBtn.addEventListener('click', hideCookiePopup);
-  }
-  showCookiePopup();
+    // ... (Прочие константы для форм) ...
+    const quizForm = document.getElementById('quiz-form');
+    const contactForm = document.getElementById('contact-form');
+    const submitContactBtn = document.getElementById('submit-btn');
+    const successMessage = document.getElementById('success-message');
+    let correctCaptchaAnswer = 0; 
 
 
-  // =================================================
-  // 2. ЛОГИКА МЕНЮ (HEADER TOGGLE)
-  // =================================================
+    // =================================================
+    // 1. COOKIE POPUP ЛОГИКА
+    // =================================================
+    
+    const showCookiePopup = () => {
+        if (cookiePopup && localStorage.getItem(cookieName) !== 'true') {
+            setTimeout(() => {
+                cookiePopup.classList.add('cookie-popup--visible');
+            }, 1000); 
+        }
+    };
 
-  const toggleMenu = () => {
-      // Проверяем, что элементы существуют, прежде чем с ними работать
-      if (!headerToggle || !navMenu) return;
+    const hideCookiePopup = () => {
+        if (cookiePopup) {
+            cookiePopup.classList.remove('cookie-popup--visible');
+            localStorage.setItem(cookieName, 'true');
+        }
+    };
 
-      const isActive = headerToggle.classList.toggle('is-active');
-
-      if (isActive) {
-          navMenu.style.display = 'flex';
-          document.body.style.overflow = 'hidden';
-      } else {
-          navMenu.style.display = 'none';
-          document.body.style.overflow = '';
-      }
-  };
-
-  if (headerToggle && navMenu) {
-      headerToggle.addEventListener('click', toggleMenu);
-
-      navLinks.forEach(link => {
-          link.addEventListener('click', () => {
-              // Закрываем меню, только если оно открыто и мы на мобильном разрешении (<768px)
-              if (window.innerWidth < 768 && headerToggle.classList.contains('is-active')) {
-                  toggleMenu();
-              }
-          });
-      });
-
-      window.addEventListener('resize', () => {
-           if (window.innerWidth >= 768) {
-              navMenu.style.display = 'block';
-              document.body.style.overflow = '';
-              headerToggle.classList.remove('is-active'); // Сбрасываем состояние бургера
-          } else {
-               if (!headerToggle.classList.contains('is-active')) {
-                   navMenu.style.display = 'none';
-               }
-          }
-      });
-
-      if (window.innerWidth >= 768) {
-          navMenu.style.display = 'block';
-      }
-  }
+    if (cookieAcceptBtn) {
+        cookieAcceptBtn.addEventListener('click', hideCookiePopup);
+    }
+    showCookiePopup();
 
 
-  // =================================================
-  // 3. AOS (ANIMATE ON SCROLL) ИНИЦИАЛИЗАЦИЯ
-  // =================================================
+    // =================================================
+    // 2. ЛОГИКА МЕНЮ (HEADER TOGGLE) - ИСПРАВЛЕНО!
+    // =================================================
 
-  if (typeof AOS !== 'undefined') {
-      AOS.init({
-          once: true,
-          duration: 1000,
-      });
-  }
+    const toggleMenu = () => {
+        if (!headerToggle || !navMenu) return; 
+        
+        const isActive = headerToggle.classList.toggle('is-active');
 
+        if (isActive) {
+            navMenu.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        } else {
+            navMenu.style.display = 'none';
+            document.body.style.overflow = ''; 
+        }
+    };
 
-  // =================================================
-  // 4. ЛОГИКА ОЦЕНКИ ЗНАНИЙ (QUIZ) - СТРУКТУРА-ЗАГЛУШКА
-  // =================================================
+    if (headerToggle && navMenu) {
+        headerToggle.addEventListener('click', toggleMenu);
 
-  // (Логика Quiz оставлена как заглушка, так как секция была удалена из CSS)
-
-  // =================================================
-  // 5. ЛОГИКА ФОРМЫ КОНТАКТОВ (#contact-form)
-  // =================================================
-
-  const generateCaptcha = () => {
-      const num1 = Math.floor(Math.random() * 10) + 1;
-      const num2 = Math.floor(Math.random() * 5) + 1;
-      const questionElement = document.getElementById('captcha-question');
-
-      correctCaptchaAnswer = num1 + num2;
-      if (questionElement) {
-           questionElement.textContent = `${num1} + ${num2} = ?`;
-      }
-  };
-
-  const validateForm = () => {
-      let isValid = true;
-
-      const setError = (elementId, message) => {
-          const errorElement = document.getElementById(elementId + '-error');
-          if (errorElement) {
-              errorElement.textContent = message;
-          }
-          if (message) isValid = false;
-      };
-
-      const nameInput = document.getElementById('name');
-      if (nameInput && nameInput.value.trim().length < 2) {
-          setError('name', 'Имя должно содержать минимум 2 символа.');
-      } else {
-          setError('name', '');
-      }
-
-      const emailInput = document.getElementById('email');
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (emailInput && !emailRegex.test(emailInput.value.trim())) {
-          setError('email', 'Введите корректный Email адрес.');
-      } else {
-          setError('email', '');
-      }
-
-      const phoneInput = document.getElementById('phone');
-      const letterRegex = /[a-zA-Zа-яА-Я]/;
-
-      if (phoneInput && phoneInput.value.trim() !== '') {
-           if (letterRegex.test(phoneInput.value.trim())) {
-              setError('phone', 'Поле может содержать только цифры и специальные символы.');
-          } else {
-              setError('phone', '');
-          }
-      } else {
-           setError('phone', '');
-      }
-
-      const captchaInput = document.getElementById('captcha');
-      if (captchaInput) {
-          if (parseInt(captchaInput.value.trim()) !== correctCaptchaAnswer) {
-              setError('captcha', 'Неверный ответ. Попробуйте снова.');
-              generateCaptcha();
-              captchaInput.value = '';
-          } else {
-              setError('captcha', '');
-          }
-      }
-
-      const agreementCheckbox = document.getElementById('agreement');
-      if (agreementCheckbox && !agreementCheckbox.checked) {
-          setError('agreement', 'Необходимо согласиться с обработкой данных.');
-      } else {
-          setError('agreement', '');
-      }
-
-      return isValid;
-  };
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Закрываем меню, только если оно открыто и мы на мобильном разрешении
+                if (window.innerWidth < 768 && headerToggle.classList.contains('is-active')) {
+                    toggleMenu(); 
+                }
+            });
+        });
+        
+        // ВНИМАНИЕ: УДАЛЕН КОНФЛИКТУЮЩИЙ КОД resize И ПРОВЕРКИ window.innerWidth.
+        // Теперь видимость меню полностью управляется CSS медиа-запросами.
+    }
 
 
-  if (contactForm) {
-      generateCaptcha();
+    // =================================================
+    // 3. AOS (ANIMATE ON SCROLL) ИНИЦИАЛИЗАЦИЯ
+    // =================================================
 
-      contactForm.addEventListener('submit', (e) => {
-          e.preventDefault();
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            once: true, 
+            duration: 1000, 
+        });
+    }
 
-          successMessage.style.display = 'none';
+    
+    // =================================================
+    // 4. ЛОГИКА ОЦЕНКИ ЗНАНИЙ (QUIZ) - СТРУКТУРА-ЗАГЛУШКА
+    // ... (Код Quiz пропущен) ...
+    
+    // =================================================
+    // 5. ЛОГИКА ФОРМЫ КОНТАКТОВ (#contact-form)
+    // ... (Код Contact Form пропущен) ...
 
-          if (!validateForm()) {
-              return;
-          }
+    const generateCaptcha = () => {
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 5) + 1;
+        const questionElement = document.getElementById('captcha-question');
 
-          const originalText = submitContactBtn.textContent;
-          submitContactBtn.textContent = 'Отправка...';
-          submitContactBtn.disabled = true;
+        correctCaptchaAnswer = num1 + num2;
+        if (questionElement) {
+             questionElement.textContent = `${num1} + ${num2} = ?`;
+        }
+    };
 
-          setTimeout(() => {
-              successMessage.textContent = '✅ Заявка успешно отправлена! Эксперт свяжется с вами в ближайшее время.';
-              successMessage.classList.add('form__message--success');
-              successMessage.style.display = 'block';
+    const validateForm = () => {
+        // [ ... ВЕСЬ КОД ВАЛИДАЦИИ ... ]
+        let isValid = true;
+        
+        const setError = (elementId, message) => {
+            const errorElement = document.getElementById(elementId + '-error');
+            if (errorElement) {
+                errorElement.textContent = message;
+            }
+            if (message) isValid = false;
+        };
 
-              contactForm.reset();
-              generateCaptcha();
+        const nameInput = document.getElementById('name');
+        if (nameInput && nameInput.value.trim().length < 2) {
+            setError('name', 'Имя должно содержать минимум 2 символа.');
+        } else {
+            setError('name', '');
+        }
 
-              setTimeout(() => {
-                  submitContactBtn.textContent = originalText;
-                  submitContactBtn.disabled = false;
-                  successMessage.style.display = 'none';
-              }, 4000);
+        const emailInput = document.getElementById('email');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailInput && !emailRegex.test(emailInput.value.trim())) {
+            setError('email', 'Введите корректный Email адрес.');
+        } else {
+            setError('email', '');
+        }
 
-          }, 1500);
-      });
-  }
+        const phoneInput = document.getElementById('phone');
+        const letterRegex = /[a-zA-Zа-яА-Я]/; 
+        
+        if (phoneInput && phoneInput.value.trim() !== '') {
+             if (letterRegex.test(phoneInput.value.trim())) {
+                setError('phone', 'Поле может содержать только цифры и специальные символы.');
+            } else {
+                setError('phone', '');
+            }
+        } else {
+             setError('phone', '');
+        }
+
+        const captchaInput = document.getElementById('captcha');
+        if (captchaInput) {
+            if (parseInt(captchaInput.value.trim()) !== correctCaptchaAnswer) {
+                setError('captcha', 'Неверный ответ. Попробуйте снова.');
+                generateCaptcha(); 
+                captchaInput.value = '';
+            } else {
+                setError('captcha', '');
+            }
+        }
+        
+        const agreementCheckbox = document.getElementById('agreement');
+        if (agreementCheckbox && !agreementCheckbox.checked) {
+            setError('agreement', 'Необходимо согласиться с обработкой данных.');
+        } else {
+            setError('agreement', '');
+        }
+
+        return isValid;
+    };
 
 
-  // =================================================
-  // 6. ИНИЦИАЛИЗАЦИЯ LUCIDE ICONS (Улучшенная версия)
-  // =================================================
+    if (contactForm) {
+        generateCaptcha(); 
 
-  /**
-   * Инициализирует иконки Lucide. Выносится в отдельную функцию для надежности.
-   */
-  const initializeLucideIcons = () => {
-      if (typeof lucide !== 'undefined') {
-          try {
-              // Проходим по всем элементам с data-lucide и преобразуем их в SVG
-              lucide.createIcons();
-              console.log("Lucide Icons successfully initialized.");
-          } catch (error) {
-              console.error("Lucide Icons failed to create icons:", error);
-          }
-      } else {
-          console.warn('Lucide Icons script not detected. Check CDN link in index.html.');
-      }
-  };
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            successMessage.style.display = 'none';
 
-  // Вызываем инициализацию Lucide после загрузки DOM
-  initializeLucideIcons();
+            if (!validateForm()) {
+                return;
+            }
+            
+            const originalText = submitContactBtn.textContent;
+            submitContactBtn.textContent = 'Отправка...';
+            submitContactBtn.disabled = true;
+
+            setTimeout(() => {
+                successMessage.textContent = '✅ Заявка успешно отправлена! Эксперт свяжется с вами в ближайшее время.';
+                successMessage.classList.add('form__message--success');
+                successMessage.style.display = 'block';
+                
+                contactForm.reset();
+                generateCaptcha(); 
+
+                setTimeout(() => {
+                    submitContactBtn.textContent = originalText;
+                    submitContactBtn.disabled = false;
+                    successMessage.style.display = 'none';
+                }, 4000); 
+
+            }, 1500); 
+        });
+    }
+
+
+    // =================================================
+    // 6. ИНИЦИАЛИЗАЦИЯ LUCIDE ICONS
+    // =================================================
+
+    const initializeLucideIcons = () => {
+        if (typeof lucide !== 'undefined') {
+            try {
+                lucide.createIcons();
+            } catch (error) {
+                console.error("Lucide Icons failed to create icons:", error);
+            }
+        }
+    };
+    
+    initializeLucideIcons();
 
 });
