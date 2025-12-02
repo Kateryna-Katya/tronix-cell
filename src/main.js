@@ -3,21 +3,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // =================================================
   // КОНСТАНТЫ
   // =================================================
-  const headerToggle = document.getElementById('header-toggle');
+  // Примечание: Используем headerToggle вместо navToggle, если это его id
+  const headerToggle = document.getElementById('nav-toggle');
   const navMenu = document.getElementById('nav-menu');
   const navLinks = document.querySelectorAll('.nav__link');
 
-  // =================================================
-  // 1. COOKIE POPUP ЛОГИКА
-  // =================================================
   const cookiePopup = document.getElementById('cookie-popup');
   const cookieAcceptBtn = document.getElementById('cookie-accept');
   const cookieName = 'tronix_cookie_accepted';
 
-  /**
-   * Показывает Cookie Popup, если пользователь еще не принимал политику.
-   * Запускается с небольшой задержкой для лучшего UX.
-   */
+  const quizForm = document.getElementById('quiz-form');
+  const contactForm = document.getElementById('contact-form');
+  const submitContactBtn = document.getElementById('submit-btn');
+  const successMessage = document.getElementById('success-message');
+
+  let correctCaptchaAnswer = 0;
+
+
+  // =================================================
+  // 1. COOKIE POPUP ЛОГИКА
+  // =================================================
+
   const showCookiePopup = () => {
       if (cookiePopup && localStorage.getItem(cookieName) !== 'true') {
           setTimeout(() => {
@@ -26,9 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   };
 
-  /**
-   * Скрывает Cookie Popup и сохраняет выбор пользователя в localStorage.
-   */
   const hideCookiePopup = () => {
       if (cookiePopup) {
           cookiePopup.classList.remove('cookie-popup--visible');
@@ -36,12 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   };
 
-  // Привязываем обработчик к кнопке "Принять"
   if (cookieAcceptBtn) {
       cookieAcceptBtn.addEventListener('click', hideCookiePopup);
   }
-
-  // Запускаем показ попапа
   showCookiePopup();
 
 
@@ -49,41 +49,45 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2. ЛОГИКА МЕНЮ (HEADER TOGGLE)
   // =================================================
 
-  /**
-   * Скрывает мобильное меню и деактивирует иконку-бургер.
-   */
-  const closeMenu = () => {
-      if (navMenu) navMenu.style.display = 'none';
-      if (headerToggle) headerToggle.classList.remove('is-active');
+  const toggleMenu = () => {
+      // Проверяем, что элементы существуют, прежде чем с ними работать
+      if (!headerToggle || !navMenu) return;
+
+      const isActive = headerToggle.classList.toggle('is-active');
+
+      if (isActive) {
+          navMenu.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+      } else {
+          navMenu.style.display = 'none';
+          document.body.style.overflow = '';
+      }
   };
 
   if (headerToggle && navMenu) {
-      // Переключение меню
-      headerToggle.addEventListener('click', () => {
-          const isActive = headerToggle.classList.toggle('is-active');
-          navMenu.style.display = isActive ? 'flex' : 'none';
-      });
+      headerToggle.addEventListener('click', toggleMenu);
 
-      // Закрытие меню при клике на любой элемент навигации
       navLinks.forEach(link => {
-          link.addEventListener('click', closeMenu);
+          link.addEventListener('click', () => {
+              // Закрываем меню, только если оно открыто и мы на мобильном разрешении (<768px)
+              if (window.innerWidth < 768 && headerToggle.classList.contains('is-active')) {
+                  toggleMenu();
+              }
+          });
       });
 
-      // Корректное отображение меню при изменении размера экрана (mobile <-> desktop)
       window.addEventListener('resize', () => {
            if (window.innerWidth >= 768) {
-              // На десктопе меню всегда должно быть видно
               navMenu.style.display = 'block';
-              headerToggle.classList.remove('is-active');
+              document.body.style.overflow = '';
+              headerToggle.classList.remove('is-active'); // Сбрасываем состояние бургера
           } else {
-               // На мобильных скрываем меню, если оно не активно
                if (!headerToggle.classList.contains('is-active')) {
                    navMenu.style.display = 'none';
                }
           }
       });
 
-      // Инициализация отображения навигации при загрузке (для десктопов)
       if (window.innerWidth >= 768) {
           navMenu.style.display = 'block';
       }
@@ -94,134 +98,153 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. AOS (ANIMATE ON SCROLL) ИНИЦИАЛИЗАЦИЯ
   // =================================================
 
-  // Инициализация библиотеки AOS (если она подключена)
   if (typeof AOS !== 'undefined') {
       AOS.init({
-          duration: 1000,
-          easing: 'ease-in-out',
           once: true,
-          mirror: false
+          duration: 1000,
       });
   }
 
 
   // =================================================
-  // 4. ЛОГИКА КОНТАКТНОЙ ФОРМЫ
+  // 4. ЛОГИКА ОЦЕНКИ ЗНАНИЙ (QUIZ) - СТРУКТУРА-ЗАГЛУШКА
   // =================================================
 
-  const contactForm = document.getElementById('contact-form');
-  const formMessageSuccess = document.getElementById('form-message-success');
-  const formMessageError = document.getElementById('form-message-error');
+  // (Логика Quiz оставлена как заглушка, так как секция была удалена из CSS)
 
-  /**
-   * Выполняет простую клиентскую валидацию полей формы.
-   */
+  // =================================================
+  // 5. ЛОГИКА ФОРМЫ КОНТАКТОВ (#contact-form)
+  // =================================================
+
+  const generateCaptcha = () => {
+      const num1 = Math.floor(Math.random() * 10) + 1;
+      const num2 = Math.floor(Math.random() * 5) + 1;
+      const questionElement = document.getElementById('captcha-question');
+
+      correctCaptchaAnswer = num1 + num2;
+      if (questionElement) {
+           questionElement.textContent = `${num1} + ${num2} = ?`;
+      }
+  };
+
   const validateForm = () => {
       let isValid = true;
 
-      // Получаем значения полей
-      const name = document.getElementById('name')?.value.trim() || '';
-      const email = document.getElementById('email')?.value.trim() || '';
-      const message = document.getElementById('message')?.value.trim() || '';
-      const agreement = document.getElementById('agreement')?.checked || false;
-
-      // Вспомогательная функция для установки ошибок
-      const setError = (id, msg) => {
-          const element = document.getElementById(id);
-          if (element) element.textContent = msg;
-          if (msg) isValid = false;
+      const setError = (elementId, message) => {
+          const errorElement = document.getElementById(elementId + '-error');
+          if (errorElement) {
+              errorElement.textContent = message;
+          }
+          if (message) isValid = false;
       };
 
-      // Валидация имени
-      setError('name-error', name.length < 2 ? 'Введите корректное имя.' : '');
+      const nameInput = document.getElementById('name');
+      if (nameInput && nameInput.value.trim().length < 2) {
+          setError('name', 'Имя должно содержать минимум 2 символа.');
+      } else {
+          setError('name', '');
+      }
 
-      // Валидация email
-      setError('email-error', !/^\S+@\S+\.\S+$/.test(email) ? 'Введите корректный email.' : '');
+      const emailInput = document.getElementById('email');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailInput && !emailRegex.test(emailInput.value.trim())) {
+          setError('email', 'Введите корректный Email адрес.');
+      } else {
+          setError('email', '');
+      }
 
-      // Валидация сообщения
-      setError('message-error', message.length < 10 ? 'Сообщение должно быть длиннее 10 символов.' : '');
+      const phoneInput = document.getElementById('phone');
+      const letterRegex = /[a-zA-Zа-яА-Я]/;
 
-      // Валидация согласия
-      setError('agreement-error', !agreement ? 'Требуется согласие на обработку.' : '');
+      if (phoneInput && phoneInput.value.trim() !== '') {
+           if (letterRegex.test(phoneInput.value.trim())) {
+              setError('phone', 'Поле может содержать только цифры и специальные символы.');
+          } else {
+              setError('phone', '');
+          }
+      } else {
+           setError('phone', '');
+      }
 
-      // Валидацию капчи здесь пропускаем, так как она обычно серверная
+      const captchaInput = document.getElementById('captcha');
+      if (captchaInput) {
+          if (parseInt(captchaInput.value.trim()) !== correctCaptchaAnswer) {
+              setError('captcha', 'Неверный ответ. Попробуйте снова.');
+              generateCaptcha();
+              captchaInput.value = '';
+          } else {
+              setError('captcha', '');
+          }
+      }
+
+      const agreementCheckbox = document.getElementById('agreement');
+      if (agreementCheckbox && !agreementCheckbox.checked) {
+          setError('agreement', 'Необходимо согласиться с обработкой данных.');
+      } else {
+          setError('agreement', '');
+      }
 
       return isValid;
   };
 
 
   if (contactForm) {
+      generateCaptcha();
+
       contactForm.addEventListener('submit', (e) => {
           e.preventDefault();
 
-          // Сбрасываем предыдущие сообщения
-          if (formMessageSuccess) formMessageSuccess.style.display = 'none';
-          if (formMessageError) formMessageError.style.display = 'none';
-          if (formMessageError) formMessageError.textContent = '';
+          successMessage.style.display = 'none';
 
-
-          if (validateForm()) {
-
-              // --- ИМИТАЦИЯ ОТПРАВКИ ФОРМЫ ---
-              console.log('Форма успешно отправлена (имитация).');
-
-              // Показываем сообщение об успехе и сбрасываем форму
-              if (formMessageSuccess) {
-                  formMessageSuccess.style.display = 'block';
-                  contactForm.reset();
-              }
-
-              // В реальном приложении здесь должен быть Fetch API или AJAX запрос:
-              /*
-              fetch('/api/contact', {
-                  method: 'POST',
-                  body: new FormData(contactForm)
-              })
-              .then(response => {
-                  if (response.ok) {
-                      // Успех
-                  } else {
-                      // Ошибка
-                  }
-              })
-              .catch(error => {
-                  // Ошибка сети или другая
-              });
-              */
-
-          } else {
-              console.log('Форма содержит ошибки валидации.');
-              if (formMessageError) {
-                  formMessageError.textContent = 'Пожалуйста, исправьте ошибки в форме.';
-                  formMessageError.style.display = 'block';
-              }
+          if (!validateForm()) {
+              return;
           }
+
+          const originalText = submitContactBtn.textContent;
+          submitContactBtn.textContent = 'Отправка...';
+          submitContactBtn.disabled = true;
+
+          setTimeout(() => {
+              successMessage.textContent = '✅ Заявка успешно отправлена! Эксперт свяжется с вами в ближайшее время.';
+              successMessage.classList.add('form__message--success');
+              successMessage.style.display = 'block';
+
+              contactForm.reset();
+              generateCaptcha();
+
+              setTimeout(() => {
+                  submitContactBtn.textContent = originalText;
+                  submitContactBtn.disabled = false;
+                  successMessage.style.display = 'none';
+              }, 4000);
+
+          }, 1500);
       });
   }
 
+
   // =================================================
-  // 5. ЛОГИКА ОЦЕНКИ ЗНАНИЙ (QUIZ) - СТРУКТУРА-ЗАГЛУШКА
+  // 6. ИНИЦИАЛИЗАЦИЯ LUCIDE ICONS (Улучшенная версия)
   // =================================================
 
-  // Оставляем структуру для будущего развития, даже если CSS секции исключен.
-  const quizContainer = document.getElementById('quiz-container');
-  const quizStartBtn = document.getElementById('quiz-start-btn');
-
-  if (quizContainer) {
-      console.log('Quiz container found. Logic is deferred/placeholder.');
-
-      const questions = [
-          // { text: "Вопрос 1...", options: ["A", "B", "C"], correct: "A" }
-      ];
-
-      const startQuiz = () => {
-          console.log('Starting quiz...');
-          // ... Здесь будет логика отображения вопросов и отслеживания ответов ...
-      };
-
-      if (quizStartBtn) {
-          // quizStartBtn.addEventListener('click', startQuiz);
+  /**
+   * Инициализирует иконки Lucide. Выносится в отдельную функцию для надежности.
+   */
+  const initializeLucideIcons = () => {
+      if (typeof lucide !== 'undefined') {
+          try {
+              // Проходим по всем элементам с data-lucide и преобразуем их в SVG
+              lucide.createIcons();
+              console.log("Lucide Icons successfully initialized.");
+          } catch (error) {
+              console.error("Lucide Icons failed to create icons:", error);
+          }
+      } else {
+          console.warn('Lucide Icons script not detected. Check CDN link in index.html.');
       }
-  }
+  };
 
-}); // Конец DOMContentLoaded
+  // Вызываем инициализацию Lucide после загрузки DOM
+  initializeLucideIcons();
+
+});
