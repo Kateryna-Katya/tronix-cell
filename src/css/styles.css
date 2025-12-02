@@ -1155,3 +1155,132 @@ a:hover {
 
   /* ... (остальные стили для десктопа остаются прежними) ... */
 }
+/* ================================================= */
+/* ЭТАП 5.1: COOKIE POPUP */
+/* ================================================= */
+
+.cookie-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Очень высокий Z-index, чтобы перекрыть все */
+  background-color: #25253e; /* Темный фон */
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+  padding: 1rem 1.5rem;
+  transform: translateY(100%); /* Изначально скрыт за пределами экрана */
+  transition: transform 0.5s ease-out;
+}
+
+.cookie-popup--visible {
+  transform: translateY(0); /* Показываем попап */
+}
+
+.cookie-popup__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+.cookie-popup__text {
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+  text-align: center;
+}
+
+.cookie-popup__link {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.cookie-popup__btn {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+@media screen and (min-width: 768px) {
+  .cookie-popup__content {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 2rem;
+  }
+  .cookie-popup__text {
+      text-align: left;
+  }
+}
+/* ... (стили до конца ЭТАП 4: КОНТАКТЫ) ... */
+
+/* ================================================= */
+/* ЭТАП 5.2: СТИЛИ ДЛЯ ЮРИДИЧЕСКИХ СТРАНИЦ (.pages) */
+/* ================================================= */
+
+.pages {
+  padding-top: calc(var(--header-height) + 2rem); /* Отступ сверху */
+  padding-bottom: var(--section-padding);
+  background-color: var(--color-dark); /* Основной темный фон */
+}
+
+.pages .container {
+  max-width: 900px; /* Сужаем контейнер для лучшей читаемости длинного текста */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pages h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--color-primary); /* Голубой заголовок */
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(0, 123, 255, 0.3);
+  padding-bottom: 1rem;
+  text-align: left;
+}
+
+.pages h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--color-accent); /* Лаймовый подзаголовок */
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  padding-left: 0.5rem;
+  border-left: 4px solid var(--color-accent);
+}
+
+.pages p {
+  color: var(--color-text-light);
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+.pages strong {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.pages a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.pages ul {
+  list-style: disc;
+  margin-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-left: 0;
+}
+
+.pages ul li {
+  margin-bottom: 0.75rem;
+  color: var(--color-text-light);
+  line-height: 1.6;
+}
+
+.pages .contact-info a {
+  color: var(--color-accent);
+}
+
+/* ================================================= */
+/* ЭТАП 5.1: COOKIE POPUP */
+/* ... (стили Cookie Popup остаются прежними) ... */
