@@ -1,1 +1,1157 @@
-1
+/* ================================================= */
+/* ЭТАП 0: ГЛОБАЛЬНЫЕ СТИЛИ И ПЕРЕМЕННЫЕ */
+/* ================================================= */
+
+/* CSS Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Цвета */
+  --color-primary: #007BFF; /* Яркий Голубой */
+  --color-accent: #00FF8C;  /* Электрический Лайм */
+  --color-dark: #1A1A2E;    /* Глубокий Индиго (Фон) */
+  --color-text-light: #F4F4F8; /* Светлый текст */
+  --color-text-muted: #A0AEC0; /* Приглушенный текст */
+  --color-shadow: rgba(0, 0, 0, 0.3);
+
+  /* Шрифты */
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Размеры */
+  --header-height: 4.5rem;
+  --section-padding: 5rem 0;
+
+  /* Градиент для CTA-кнопок */
+  --gradient-cta: linear-gradient(90deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  --gradient-cta-hover: linear-gradient(90deg, var(--color-primary) 0%, #00d3ff 100%);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ================================================= */
+/* BODY и БАЗОВАЯ ТИПОГРАФИКА */
+/* ================================================= */
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-light);
+  background-color: var(--color-dark);
+  /* Фон с паттерном */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="g" width="10" height="10" patternUnits="userSpaceOnUse"><path fill="none" stroke="%232b2b48" d="M0 0h100v100H0z"/></pattern></defs><rect width="100%" height="100%" fill="url(%23g)"/></svg>');
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text-light);
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-primary);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-accent);
+}
+
+/* ================================================= */
+/* CONTAINER */
+/* ================================================= */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ================================================= */
+/* КНОПКИ (BUTTONS) */
+/* ================================================= */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.button--primary {
+  background: var(--gradient-cta);
+  color: var(--color-dark);
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+.button--primary:hover {
+  background: var(--gradient-cta-hover);
+  color: var(--color-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 255, 140, 0.6);
+}
+
+.button--secondary {
+  background: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+}
+
+.button--secondary:hover {
+  background-color: rgba(0, 255, 140, 0.1);
+  color: var(--color-text-light);
+  transform: translateY(-2px);
+}
+
+/* ================================================= */
+/* ЛОГОТИП (LOGO) */
+/* ================================================= */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  transition: opacity 0.3s;
+}
+
+.logo:hover {
+  opacity: 0.8;
+}
+
+.logo__icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+/* Стили для логотипа в футере */
+.logo--light {
+  color: var(--color-text-light);
+}
+
+/* ================================================= */
+/* ЭТАП 1: ХЕДЕР (HEADER) */
+/* ================================================= */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: var(--color-dark);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  transition: background-color 0.3s ease;
+}
+
+.header__container {
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Навигация (NAV) --- */
+.nav {
+  display: none; /* Скрываем по умолчанию для mobile-first */
+}
+
+.nav__list {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav__link {
+  display: block;
+  padding: 0.25rem 0;
+  color: var(--color-text-light);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav__link:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-accent);
+  transform: translateX(-101%);
+  transition: transform 0.3s ease;
+}
+
+.nav__link:hover:after,
+.nav__link:focus:after {
+  transform: translateX(0);
+}
+
+/* Ссылка "Старт" в мобильном меню */
+.nav__link--cta {
+  color: var(--color-accent);
+}
+.nav__link--cta:hover {
+  color: var(--color-primary);
+}
+.nav__link--cta:after {
+  background-color: var(--color-primary);
+}
+
+
+/* --- Кнопка Бургер-меню (TOGGLE) --- */
+.header__toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 101;
+}
+
+.toggle-menu__icon {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-text-light);
+  transition: transform 0.3s ease;
+}
+
+.toggle-menu__icon::before,
+.toggle-menu__icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-text-light);
+  transition: transform 0.3s ease, top 0.3s ease;
+}
+
+.toggle-menu__icon::before {
+  top: -0.5rem;
+}
+
+.toggle-menu__icon::after {
+  top: 0.5rem;
+}
+
+/* Анимация закрытия (Cross) */
+.toggle-menu.is-active .toggle-menu__icon {
+  transform: rotate(45deg);
+}
+
+.toggle-menu.is-active .toggle-menu__icon::before {
+  top: 0;
+  transform: rotate(0deg);
+}
+
+.toggle-menu.is-active .toggle-menu__icon::after {
+  top: 0;
+  transform: rotate(-90deg);
+}
+
+/* Скрываем CTA кнопку на мобильных */
+.hidden-mobile {
+  display: none;
+}
+
+/* ================================================= */
+/* ЭТАП 3.1: HERO СЕКЦИЯ (Стили с AOS.js) */
+/* ================================================= */
+
+.hero {
+  position: relative;
+  /* Увеличенный padding для Hero */
+  padding-top: calc(var(--header-height) + 4rem);
+  padding-bottom: 4rem;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero__container {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__content {
+  max-width: 900px;
+}
+
+.hero__title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+
+  /* Градиентный текст */
+  background: linear-gradient(90deg, var(--color-accent) 20%, var(--color-primary) 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-accent); /* Fallback */
+
+  text-shadow: 0 0 30px rgba(0, 255, 140, 0.3);
+}
+
+.hero__subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: var(--color-text-light);
+  margin-bottom: 3rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Добавляем эффект микродвижения на кнопки */
+.hero__cta, .hero__cta-secondary {
+  transform: perspective(1px) translateZ(0);
+}
+.hero__cta:hover {
+  animation: pulse-grow 0.5s ease-out;
+}
+@keyframes pulse-grow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* ================================================= */
+/* ЭТАП 2: ФУТЕР (FOOTER) */
+/* ================================================= */
+
+.footer {
+  background-color: #11111f; /* Чуть темнее основного фона */
+  padding-top: 4rem;
+  color: var(--color-text-muted);
+}
+
+.footer__container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+}
+
+.footer__description {
+  margin-top: 1rem;
+  max-width: 300px;
+}
+
+.footer__heading {
+  color: var(--color-text-light);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer__list {
+  list-style: none;
+}
+
+.footer__list li {
+  margin-bottom: 0.75rem;
+}
+
+.footer__link {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.footer__link:hover {
+  color: var(--color-primary);
+}
+
+/* --- Контакты в футере --- */
+.footer__contacts {
+  margin-top: 2rem;
+}
+
+.contacts__title {
+  font-weight: 600;
+  color: var(--color-text-light);
+  margin-bottom: 0.75rem;
+}
+
+.contacts__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.contacts__item i[data-lucide] {
+  width: 18px;
+  height: 18px;
+  color: var(--color-accent);
+}
+.contacts__item span {
+  color: inherit;
+  transition: color 0.3s;
+}
+.contacts__item:hover span {
+  color: var(--color-primary);
+}
+
+/* --- Нижний бар футера --- */
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.25rem 0;
+}
+
+.footer__copy {
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ================================================= */
+/* MEDIA QUERIES (ADAPTIVE DESIGN) */
+/* ================================================= */
+
+/* Tablet and larger screens (>= 768px) */
+@media screen and (min-width: 768px) {
+  .container {
+      padding: 0 2rem;
+  }
+
+  .hidden-mobile {
+      display: inline-flex;
+  }
+
+  .header__toggle {
+      display: none;
+  }
+
+  .nav {
+      display: block;
+  }
+
+  /* Десктопные стили Hero */
+  .hero {
+      padding-top: var(--header-height);
+      text-align: left;
+  }
+
+  .hero__container {
+      justify-content: flex-start;
+      padding-top: 0;
+      padding-bottom: 0;
+  }
+
+  .hero__title, .hero__subtitle {
+      margin-left: 0;
+      margin-right: 0;
+  }
+
+  .hero__actions {
+      flex-direction: row;
+      gap: 1.5rem;
+      justify-content: flex-start;
+  }
+
+  .footer__container {
+      grid-template-columns: 2fr 1fr 1.5fr;
+      gap: 3rem;
+  }
+}
+
+/* Desktop and larger screens (>= 1024px) */
+@media screen and (min-width: 1024px) {
+  :root {
+      --section-padding: 7rem 0;
+  }
+
+  .footer__container {
+      gap: 5rem;
+  }
+}
+/* ================================================= */
+/* ГЛОБАЛЬНЫЕ СТИЛИ СЕКЦИЙ */
+/* ================================================= */
+
+.section {
+  padding: var(--section-padding);
+}
+
+.section__title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.section__subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--color-text-muted);
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.section--dark {
+  background-color: #11111f; /* Чуть темнее основного фона для контраста */
+}
+
+/* ================================================= */
+/* ЭТАП 3.2: ОПИСАНИЕ ПЛАТФОРМЫ (#platform) */
+/* ================================================= */
+
+.platform__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  text-align: center;
+}
+
+.platform__content {
+  order: 2; /* Сначала контент, потом изображение (Mobile-First) */
+  max-width: 550px;
+}
+
+.platform__title, .platform__text {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.platform__text {
+  margin-bottom: 2rem;
+}
+
+.platform__image-block {
+  order: 1;
+  position: relative;
+  max-width: 350px;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 123, 255, 0.2);
+}
+
+.platform__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.8; /* Делаем заглушку менее яркой */
+}
+
+.platform__label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  padding: 0.75rem;
+  color: var(--color-accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.platform__features-list {
+  list-style: none;
+  margin-bottom: 2.5rem;
+  padding-left: 0;
+  text-align: left;
+}
+
+.platform__features-list li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+}
+
+.platform__features-list i {
+  color: var(--color-accent);
+}
+
+/* ================================================= */
+/* ЭТАП 3.3: ПРЕИМУЩЕСТВА (#advantages) */
+/* ================================================= */
+
+.advantages {
+  background-color: var(--color-dark); /* Возвращаемся к основному фону */
+}
+
+.advantages__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.advantage-card {
+  background-color: #25253e; /* Фон для карточек */
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(0, 123, 255, 0.1);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.advantage-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 123, 255, 0.4);
+}
+
+.advantage-card__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+.advantage-card__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.advantage-card__text {
+  color: var(--color-text-muted);
+}
+
+/* ================================================= */
+/* ЭТАП 3.4: ИННОВАЦИИ (#innovations) */
+/* ================================================= */
+
+.innovations {
+  padding-top: var(--section-padding);
+  padding-bottom: var(--section-padding);
+}
+
+.innovations__container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  align-items: center;
+  text-align: center;
+}
+
+.innovations__content {
+  order: 2;
+  max-width: 550px;
+}
+
+.innovations__title, .innovations__text {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.innovations__text {
+  margin-bottom: 2.5rem;
+}
+
+.innovations__visual {
+  order: 1;
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.innovations__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  opacity: 0.7;
+}
+
+.innovations__data-ring {
+  /* Добавляем эффект вращающегося кольца для визуальной инновации */
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 120%;
+  height: 120%;
+  border: 3px solid var(--color-primary);
+  border-radius: 50%;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  animation: rotateRing 8s linear infinite;
+  z-index: 0;
+}
+
+@keyframes rotateRing {
+  to {
+      transform: rotate(360deg);
+  }
+}
+
+
+/* ================================================= */
+/* ЭТАП 3.5: ОБРАЗОВАТЕЛЬНАЯ ЧАСТЬ (#education) */
+/* ================================================= */
+
+.education__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.education__header {
+  text-align: center;
+}
+
+.course-card {
+  background-color: #25253e;
+  padding: 2rem;
+  border-radius: 1rem;
+  border-left: 5px solid var(--color-primary);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.course-card:hover {
+  border-left-color: var(--color-accent);
+  transform: translateY(-5px);
+}
+
+.course-card--accent {
+  background: linear-gradient(135deg, #25253e, #313158);
+  border-left-color: var(--color-accent);
+  box-shadow: 0 5px 30px rgba(0, 255, 140, 0.3);
+}
+
+.course-card__icon-box {
+  width: 3rem;
+  height: 3rem;
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.course-card__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-primary);
+}
+
+.course-card__title {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.course-card__text {
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.course-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.course-card__link:hover {
+  color: var(--color-primary);
+}
+
+/* ================================================= */
+/* MEDIA QUERIES (ADAPTIVE DESIGN) */
+/* ================================================= */
+
+@media screen and (min-width: 768px) {
+  /* --- Platform & Innovations (Side-by-side) --- */
+  .platform__container, .innovations__container {
+      flex-direction: row;
+      text-align: left;
+      gap: 5rem;
+  }
+  .platform__container {
+      flex-direction: row; /* Изображение слева */
+  }
+  .innovations__container {
+      flex-direction: row-reverse; /* Изображение справа */
+  }
+  .platform__content, .innovations__content {
+      order: initial;
+  }
+  .platform__image-block {
+      max-width: 450px;
+  }
+  .innovations__visual {
+      max-width: 450px;
+  }
+
+  /* --- Advantages Grid --- */
+  .advantages__grid {
+      grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* --- Education Grid --- */
+  .education__grid {
+      grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .advantages__grid {
+      grid-template-columns: repeat(4, 1fr);
+  }
+}
+/* ... (стили после ЭТАП 3.5: ОЦЕНКА ЗНАНИЙ (QUIZ)) ... */
+
+/* ================================================= */
+/* ЭТАП 4: КОНТАКТЫ (#contact) */
+/* ================================================= */
+
+.contact {
+  background-color: #11111f; /* Чуть темнее фон для выделения */
+}
+
+.contact__container {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  align-items: center;
+}
+
+.contact__content {
+  max-width: 500px;
+}
+
+.contact__heading, .contact__text {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.contact__text {
+  margin-bottom: 3rem;
+}
+
+.contact__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact__info-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+}
+
+.contact__info-item i {
+  color: var(--color-accent);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.contact__info-item a {
+  color: var(--color-text-light);
+}
+
+.contact__info-item a:hover {
+  color: var(--color-primary);
+}
+
+.contact__form-wrapper {
+  width: 100%;
+  max-width: 450px;
+}
+
+/* --- Стили Формы (FORM) --- */
+.form {
+  background-color: var(--color-dark);
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border-top: 5px solid var(--color-primary);
+}
+
+.form__heading {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--color-accent);
+}
+
+.form__group {
+  margin-bottom: 1.5rem;
+}
+
+.form__label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+}
+
+.form__input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #313158;
+  background-color: #25253e;
+  color: var(--color-text-light);
+  border-radius: 0.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form__input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+/* Капча стили */
+.form__group--captcha {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__group--captcha .form__label {
+  font-size: 1rem;
+}
+
+.form__input--small {
+  width: 150px;
+}
+
+/* Чекбокс согласия */
+.form__group--checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.form__group--checkbox input[type="checkbox"] {
+  margin-top: 4px; /* Выравнивание по тексту */
+  accent-color: var(--color-primary); /* Цвет чекбокса */
+}
+
+.form__agreement-label {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.form__agreement-label a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+/* Сообщения об ошибках и успехе */
+.form__error {
+  display: block;
+  color: #ff6b6b; /* Светло-красный */
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  min-height: 1rem; /* Фиксируем высоту, чтобы избежать "прыжков" */
+}
+
+.form__message {
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+  display: none; /* Скрыто по умолчанию */
+}
+
+.form__message--success {
+  background-color: rgba(0, 255, 140, 0.1);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+
+/* Десктопный макет */
+@media screen and (min-width: 768px) {
+  .contact__container {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 5rem;
+  }
+
+  .contact__form-wrapper {
+      flex: 1;
+      max-width: 50%;
+  }
+}
+/* ... (стили до ЭТАП 1: ХЕДЕР (HEADER)) ... */
+
+/* ================================================= */
+/* ЭТАП 1: ХЕДЕР (HEADER) - ОБНОВЛЕННЫЙ КОД */
+/* ================================================= */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: var(--color-dark);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  transition: background-color 0.3s ease;
+}
+
+.header__container {
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Навигация (NAV) - МОБИЛЬНЫЕ СТИЛИ --- */
+.nav {
+  /* Скрыто по умолчанию для mobile-first */
+  display: none;
+
+  /* Стили для полноэкранного вертикального меню */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh; /* Занимает всю высоту экрана */
+  background-color: var(--color-dark);
+  z-index: 99; /* Ниже toggle, но выше контента */
+
+  /* Вертикальное и горизонтальное центрирование */
+  justify-content: center;
+  align-items: center;
+}
+
+.nav__list {
+  display: flex;
+  flex-direction: column; /* Элементы вертикально */
+  list-style: none;
+  gap: 1.5rem; /* Уменьшаем вертикальный отступ */
+  text-align: center;
+}
+
+.nav__link {
+  /* Увеличиваем размер текста для мобильного меню */
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 0.5rem 0;
+  color: var(--color-text-light);
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+/* ... (стили .nav__link:after остаются прежними) ... */
+
+/* Ссылка "Старт" в мобильном меню */
+.nav__link--cta {
+  color: var(--color-accent);
+}
+.nav__link--cta:hover {
+  color: var(--color-primary);
+}
+.nav__link--cta:after {
+  background-color: var(--color-primary);
+}
+
+/* ... (стили TOGGLE-меню остаются прежними) ... */
+
+
+/* ================================================= */
+/* MEDIA QUERIES (ADAPTIVE DESIGN) - ОБНОВЛЕННЫЙ КОД */
+/* ================================================= */
+
+/* Tablet and larger screens (>= 768px) */
+@media screen and (min-width: 768px) {
+  /* ... (стили для контейнера, скрытия toggle) ... */
+
+  .header__toggle {
+      display: none;
+  }
+
+  .nav {
+      /* Переопределяем стили для десктопа: возвращаем горизонтальное меню */
+      position: static;
+      width: auto;
+      height: auto;
+      background-color: transparent;
+      display: block;
+      z-index: 100;
+  }
+
+  .nav__list {
+      flex-direction: row; /* Элементы горизонтально */
+      gap: 2rem;
+  }
+
+  .nav__link {
+      font-size: 0.95rem; /* Возвращаем стандартный размер */
+      font-weight: 600;
+  }
+
+  /* ... (остальные стили для десктопа остаются прежними) ... */
+}

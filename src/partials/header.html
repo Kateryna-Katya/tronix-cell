@@ -1,19 +1,31 @@
 <header class="header">
-  <div class="container">
-    <nav class="nav">
-      <a class="nav-logo" href="./index.html" aria-label="Site logo">
-        <svg class="nav-logo-icon" width="100" height="30">
-          <use href="{=$icon-path}"></use>
-        </svg>
+  <div class="container header__container">
+      <a href="/" class="header__logo logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo__icon">
+              <rect x="2" y="2" width="20" height="20" rx="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M7 7 L12 12 L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M17 7 L12 12 L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="logo__text">Tronix-Cell</span>
       </a>
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a class="nav-link {=$highlight-act}" href="./page-2.html">Page 2</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {=$highlight-curr}" href="./page-3.html">Page 3</a>
-        </li>
-      </ul>
-    </nav>
+
+      <nav class="header__nav nav" id="nav-menu">
+          <ul class="nav__list">
+              <li class="nav__item"><a href="#hero" class="nav__link">Главная</a></li>
+              <li class="nav__item"><a href="#platform" class="nav__link">Платформа</a></li>
+              <li class="nav__item"><a href="#advantages" class="nav__link">Преимущества</a></li>
+              <li class="nav__item"><a href="#innovations" class="nav__link">Инновации</a></li>
+              <li class="nav__item"><a href="#education" class="nav__link">Рост</a></li>
+             
+          </ul>
+      </nav>
+
+      <a href="#contact" class="header__cta button button--primary hidden-mobile">
+          Старт
+      </a>
+
+      <button class="header__toggle toggle-menu" id="nav-toggle" aria-label="Открыть меню">
+          <span class="toggle-menu__icon"></span>
+      </button>
   </div>
 </header>
